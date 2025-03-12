@@ -1,0 +1,55 @@
+name: Terraform ECR
+
+# Dispara manualmente no GitHub (Actions -> "Run workflow")
+on:
+  workflow_dispatch:
+    inputs:
+      terraform_action:
+        description: "Escolha a ação do Terraform (plan, apply, destroy)"
+        required: true
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+        default: plan
+
+jobs:
+  run-terraform:
+    runs-on: ubuntu-latest
+    steps:
+      # Passo 1: Checkout do código
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Passo 2: Configurar credenciais AWS via OIDC
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::114284751948:role/GitHubActionsTerraformRole
+          aws-region: us-east-1
+
+      # Passo 3: Instalar Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.4.4
+
+      # Passo 4: Inicializar Terraform
+      - name: Terraform Init
+        run: terraform init
+
+      # Passo 5: Condicional para Terraform Plan
+      - name: Terraform Plan
+        if: ${{ github.event.inputs.terraform_action == 'plan' }}
+        run: terraform plan
+
+      # Passo 6: Condicional para Terraform Apply
+      - name: Terraform Apply
+        if: ${{ github.event.inputs.terraform_action == 'apply' }}
+        run: terraform apply -auto-approve
+
+      # Passo 7: Condicional para Terraform Destroy
+      - name: Terraform Destroy
+        if: ${{ github.event.inputs.terraform_action == 'destroy' }}
+        run: terraform destroy -auto-approve
