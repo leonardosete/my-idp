@@ -22,15 +22,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Debug AWS Credentials
-        run: env | grep AWS
-
       # Passo 2: Configurar credenciais AWS via OIDC
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::114284751948:role/GitHubActionsTerraformRole
           aws-region: us-east-1
+          continue-on-error: true
+
+      # Passo 2.1: Debug AWS Credentials
+      - name: Debug AWS Credentials
+        run: env | grep AWS
 
       # Passo 3: Instalar Terraform
       - name: Setup Terraform
