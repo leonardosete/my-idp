@@ -14,15 +14,12 @@ on:
           - destroy
         default: plan
 
-# permissions:
-#   id-token: write
-#   contents: read
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   run-terraform:
-    permissions:
-      id-token: write
-      contents: read
     runs-on: ubuntu-latest
     steps:
       # Passo 1: Checkout do código
@@ -32,7 +29,6 @@ jobs:
       # Passo 2: Configurar credenciais AWS via OIDC
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
-#        continue-on-error: true
         with:
           role-to-assume: arn:aws:iam::114284751948:role/GitHubActionsTerraformRole
           aws-region: us-east-1
