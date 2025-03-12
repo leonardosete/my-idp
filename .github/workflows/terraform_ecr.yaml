@@ -14,8 +14,15 @@ on:
           - destroy
         default: plan
 
+# permissions:
+#   id-token: write
+#   contents: read
+
 jobs:
   run-terraform:
+    permissions:
+      id-token: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       # Passo 1: Checkout do código
