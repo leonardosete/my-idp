@@ -25,10 +25,10 @@ jobs:
       # Passo 2: Configurar credenciais AWS via OIDC
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v3
+        continue-on-error: true
         with:
           role-to-assume: arn:aws:iam::114284751948:role/GitHubActionsTerraformRole
           aws-region: us-east-1
-          continue-on-error: true
 
       # Passo 2.1: Debug AWS Credentials
       - name: Debug AWS Credentials
